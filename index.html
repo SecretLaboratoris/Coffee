@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Секретне повідомлення ☕</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+height:100vh;
+overflow:hidden;
+background:linear-gradient(-45deg,#0f172a,#1e293b,#0f172a,#020617);
+background-size:400% 400%;
+animation:bg 50s ease infinite;
+color:white;
+}
+
+@keyframes bg{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.screen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+opacity:0;
+pointer-events:none;
+transition:1s;
+}
+
+.active{
+opacity:1;
+pointer-events:auto;
+}
+
+h1{
+font-size:3rem;
+margin-bottom:20px;
+}
+
+p{
+font-size:1.3rem;
+max-width:700px;
+line-height:1.7;
+}
+
+button{
+padding:15px 30px;
+border:none;
+border-radius:50px;
+font-size:18px;
+cursor:pointer;
+margin:10px;
+}
+
+.yes{background:#ff4081;color:white;}
+.no{background:white;color:black;position:absolute;}
+
+.star{
+position:absolute;
+width:2px;
+height:2px;
+background:white;
+border-radius:50%;
+animation:twinkle 3s infinite;
+}
+
+@keyframes twinkle{50%{opacity:.2;}}
+
+.heart{
+position:absolute;
+font-size:30px;
+animation:fly 3s linear forwards;
+}
+
+@keyframes fly{
+from{transform:translateY(100vh);opacity:1;}
+to{transform:translateY(-100px);opacity:0;}
+}
+
+#envelope{
+font-size:120px;
+cursor:pointer;
+animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+50%{transform:scale(1.1);}
+}
+
+/* popup */
+.popup{
+background:rgba(0,0,0,0.6);
+padding:30px;
+border-radius:20px;
+backdrop-filter:blur(10px);
+text-align:center;
+}
+
+#arrow{
+font-size:60px;
+cursor:pointer;
+display:inline-block;
+animation:arrowPulse 1.2s infinite;
+margin-bottom:20px;
+transition:opacity 0.8s ease;
+}
+
+@keyframes arrowPulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.3);}
+100%{transform:scale(1);}
+}
+
+#finalText{
+font-size:1.3rem;
+max-width:400px;
+min-height:80px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="s1" class="screen active">
+<h1>🔐 Доступ отримано</h1>
+<p id="typing"></p>
+</div>
+
+<div id="s2" class="screen">
+<div id="envelope">✉️</div>
+<p>Натисни щоб відкрити повідомлення</p>
+</div>
+
+<div id="s3" class="screen">
+<h1>☕ Маленьке запитання</h1>
+
+<p>
+Серед мільярдів людей на планеті є одна,
+з якою мені було б дуже приємно провести вечір за чашкою кави 😊
+<br><br>
+І зараз ця людина читає цей текст 😊
+<br><br>
+Що скажеш 👇?
+</p>
+
+<div style="margin-top:40px;position:relative;width:350px;height:120px;">
+<button class="yes" id="yes">Так ❤️</button>
+<button class="no" id="no">Ні 🙈</button>
+</div>
+</div>
+
+<div id="s4" class="screen">
+<h1>🔥Чудовий вибір!</h1>
+<p>З нетерпінням чекаю на зустріч</p>
+</div>
+
+<!-- POPUP -->
+<div id="s5" class="screen">
+<div class="popup">
+
+<div id="arrow">👇</div>
+
+<div id="finalText"></div>
+
+</div>
+</div>
+
+<script>
+
+// зірки
+for(let i=0;i<200;i++){
+let star=document.createElement('div');
+star.className='star';
+star.style.left=Math.random()*100+'vw';
+star.style.top=Math.random()*100+'vh';
+document.body.appendChild(star);
+}
+
+const text =
+"Сканування завершено...\n"+
+"Перевірка особи...\n"+
+"✓ Гарна усмішка знайдена\n"+
+"✓ Неповторна зовнішність знайдена\n"+
+"✓ Щирість і доброта знайдена\n"+
+"✓ Почуття гумору знайдено\n"+
+"✓ Потенційний партнер для кави знайдений\n\n"+
+"Відкриваю повідомлення...";
+
+let i=0;
+
+function type(){
+if(i<text.length){
+let c=text.charAt(i);
+document.getElementById('typing').innerHTML += (c=='\n') ? '<br>' : c;
+i++;
+setTimeout(type,90);
+}else{
+setTimeout(()=>show('s2'),2000);
+}
+}
+
+type();
+
+function show(id){
+document.querySelectorAll('.screen')
+.forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+document.getElementById('envelope').onclick=()=>show('s3');
+
+const no=document.getElementById('no');
+no.addEventListener('mouseover',()=>{
+no.style.left=Math.random()*250+'px';
+no.style.top=Math.random()*80+'px';
+});
+
+document.getElementById('yes').onclick=()=>{
+
+show('s4');
+
+for(let i=0;i<80;i++){
+setTimeout(()=>{
+let h=document.createElement('div');
+h.className='heart';
+h.innerHTML='❤️';
+h.style.left=Math.random()*100+'vw';
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),5000);
+},i*50);
+}
+
+setTimeout(()=>show('s5'),3500);
+};
+
+// фінальний текст + плавне зникнення стрілки
+const finalText =
+"Для уточнення деталей зв'яжіться будь ласка з сусідським Романом";
+
+let j=0;
+
+document.getElementById('arrow').onclick=()=>{
+
+// плавне зникнення
+document.getElementById('arrow').style.opacity = '0';
+
+setTimeout(()=>{
+document.getElementById('arrow').style.display = 'none';
+
+function write(){
+if(j < finalText.length){
+document.getElementById('finalText').innerHTML += finalText.charAt(j);
+j++;
+setTimeout(write,60);
+}
+}
+
+write();
+
+},800);
+
+};
+
+</script>
+
+</body>
+</html>
